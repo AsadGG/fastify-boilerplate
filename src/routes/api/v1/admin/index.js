@@ -11,6 +11,6 @@ export default async function (fastify) {
 
   fastify.get('/', async function (request, reply) {
     request.log.info(`Handling GET ${request.url} request`);
-    return reply.status(200).send('Hello Admin');
+    return reply.status(200).send({ statusCode: 200, message: `Hello Admin` });
   });
 }

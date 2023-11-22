@@ -9,8 +9,8 @@ const __dirname = path.dirname(__filename);
 
 export default async function (fastify, opts) {
   fastify.get('/', async function (request, reply) {
-    request.log.info({ message: 'Server Is Running' });
-    return reply.status(200).send({ health: 'Server Is Running' });
+    request.log.info({ message: `Server Is Running` });
+    return reply.status(200).send({ health: `Server Is Running` });
   });
 
   fastify.register(AutoLoad, {

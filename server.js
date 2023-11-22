@@ -7,6 +7,7 @@ import fastifySwaggerUI from '@fastify/swagger-ui';
 import fastify from 'fastify';
 import app from './src/app.js';
 import { appLogger } from './src/config/logger.js';
+import { SIGNAL } from './src/config/constants.js';
 
 const server = fastify({ logger: appLogger });
 
@@ -65,3 +66,13 @@ await server.ready();
 await server.listen({
   port: server.config.APP_PORT,
 });
+
+function gracefulShutdown() {
+  server.close(() => {
+    server.log.info({ message: `Server is shutting down` });
+    process.exit(0);
+  });
+}
+
+process.on(SIGNAL.SIGNIFICANT_TERMINATION, gracefulShutdown);
+process.on(SIGNAL.SIGNIFICANT_INTERRUPT, gracefulShutdown);
