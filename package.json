@@ -1,0 +1,38 @@
+{
+  "name": "fastify-boilerplate",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "start:dev": "nodemon server.js | pino-pretty",
+    "build": "node esbuild.config.js",
+    "format": "prettier ./src server.js global-constants.js --write",
+    "lint": "npm run format && eslint ./src server.js global-constants.js"
+  },
+  "type": "module",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@fastify/autoload": "^5.0.0",
+    "@fastify/env": "^4.3.0",
+    "@fastify/redis": "^6.1.1",
+    "@fastify/sensible": "^5.0.0",
+    "@fastify/swagger": "^8.12.0",
+    "@fastify/swagger-ui": "^1.10.1",
+    "bcrypt": "^5.1.1",
+    "fastify": "^4.0.0",
+    "fastify-plugin": "^4.0.0",
+    "file-stream-rotator": "^1.0.0",
+    "lodash": "^4.17.21",
+    "pino": "^8.16.2"
+  },
+  "devDependencies": {
+    "esbuild": "^0.19.7",
+    "eslint": "^8.54.0",
+    "glob": "^10.3.10",
+    "nodemon": "^3.0.1",
+    "pino-pretty": "^10.2.3",
+    "prettier": "^3.1.0"
+  }
+}
