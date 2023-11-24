@@ -6,8 +6,8 @@ import fastifySwagger from '@fastify/swagger';
 import fastifySwaggerUI from '@fastify/swagger-ui';
 import fastify from 'fastify';
 import app from './src/app.js';
-import { appLogger } from './src/config/logger.js';
 import { SIGNAL } from './src/config/constants.js';
+import { appLogger } from './src/config/logger.js';
 
 const server = fastify({ logger: appLogger });
 

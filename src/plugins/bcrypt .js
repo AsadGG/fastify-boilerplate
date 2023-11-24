@@ -1,9 +1,9 @@
 'use strict';
 
-import fp from 'fastify-plugin';
 import bcrypt from 'bcrypt';
+import fp from 'fastify-plugin';
 
-function fastifyBcrypt(fastify, options, done) {
+async function fastifyBcrypt(fastify, options) {
   const saltRounds = options.saltRounds || 10;
 
   /**
@@ -24,8 +24,6 @@ function fastifyBcrypt(fastify, options, done) {
   }
 
   fastify.decorate('bcrypt', { hash, compare });
-
-  done();
 }
 
 const fastifyBcryptPlugin = fp(fastifyBcrypt);

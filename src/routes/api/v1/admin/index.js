@@ -1,6 +1,8 @@
 'use strict';
 
 import { adminLogger } from '../../../../config/logger.js';
+import { helloAdmin } from './controller.js';
+import { helloAdminSchema } from './schema.js';
 
 export default async function (fastify) {
   fastify.addHook('onRequest', function (request, reply, done) {
@@ -9,8 +11,11 @@ export default async function (fastify) {
     done();
   });
 
-  fastify.get('/', async function (request, reply) {
-    request.log.info(`Handling GET ${request.url} request`);
-    return reply.status(200).send({ statusCode: 200, message: `Hello Admin` });
-  });
+  fastify.get(
+    '/',
+    { schema: helloAdminSchema },
+    async function (request, reply) {
+      return helloAdmin(fastify, request, reply);
+    }
+  );
 }

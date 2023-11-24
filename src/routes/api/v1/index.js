@@ -9,14 +9,14 @@ const __dirname = path.dirname(__filename);
 
 export default async function (fastify, opts) {
   fastify.register(AutoLoad, {
-    dir: path.join(__dirname, 'user'),
-    maxDepth: 0,
-    options: Object.assign({}, opts, { prefix: '/user' }),
-  });
-
-  fastify.register(AutoLoad, {
     dir: path.join(__dirname, 'admin'),
     maxDepth: 0,
     options: Object.assign({}, opts, { prefix: '/admin' }),
+  });
+
+  fastify.register(AutoLoad, {
+    dir: path.join(__dirname, 'user'),
+    maxDepth: 0,
+    options: Object.assign({}, opts, { prefix: '/user' }),
   });
 }

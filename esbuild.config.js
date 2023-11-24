@@ -1,7 +1,7 @@
 /* eslint-disable */
 import * as esbuild from 'esbuild';
-import { globSync } from 'glob';
 import fs from 'fs';
+import { globSync } from 'glob';
 
 const entryPointsGlobPattern = './**/*.js';
 const ignoreGlobPattern = ['node_modules/**', 'esbuild.config.js'];
