@@ -1,6 +1,5 @@
 'use strict';
 
-import { getStream } from 'file-stream-rotator';
 import kebabCase from 'lodash/kebabCase.js';
 import path from 'path';
 import pino from 'pino';
@@ -14,20 +13,12 @@ import { GLOBAL_CONSTANTS } from '../../global-constants.js';
  * @param {LoggerType} moduleName The type of logger to use.
  */
 function createLogger(moduleName) {
+  const dateString = new Date().toISOString().split('T')[0];
   const logFolderPath = path.join(GLOBAL_CONSTANTS.ROOT_PATH, 'logs');
-  const logFilePath = path.join(logFolderPath, `${kebabCase(moduleName)}`);
-
-  const streams = [
-    { stream: process.stdout },
-    {
-      stream: getStream({
-        filename: `${logFilePath}-%DATE%`,
-        date_format: 'YYYY-MM-DD',
-        extension: '.log',
-        frequency: 'daily',
-      }),
-    },
-  ];
+  const logFilePath = path.join(
+    logFolderPath,
+    `${kebabCase(moduleName)}-${dateString}`
+  );
 
   const serializers = {
     request(request) {
@@ -48,10 +39,33 @@ function createLogger(moduleName) {
 
   const redact = ['request.headers.authorization'];
 
-  const logger = pino(
-    { level: 'info', redact, serializers },
-    pino.multistream(streams)
-  );
+  const targets = [
+    {
+      level: 'info',
+      target: 'pino-roll',
+      options: {
+        file: `${logFilePath}`,
+        frequency: 'daily',
+        mkdir: true,
+        extension: 'log',
+      },
+    },
+    {
+      level: 'info',
+      target: 'pino/file',
+      options: { destination: 1 },
+    },
+  ];
+
+  const pinoOptions = {
+    redact,
+    serializers,
+    transport: {
+      targets,
+    },
+  };
+
+  const logger = pino(pinoOptions);
 
   return logger;
 }

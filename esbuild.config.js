@@ -27,7 +27,7 @@ esbuild
     object.scripts = {
       start: 'node server.js',
     };
-    object.devDependencies = {};
+    delete object.devDependencies;
     fs.writeFileSync('dist/package.json', JSON.stringify(object, null, 2));
     fs.copyFileSync('.env-sample', 'dist/.env');
   })
