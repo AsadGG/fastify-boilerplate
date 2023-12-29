@@ -13,25 +13,28 @@ const server = fastify({ logger: appLogger });
 
 await server.register(fastifyEnv, {
   confKey: 'config',
+  ajv: {
+    customOptions: (ajv) => ajv.addSchema({ coerceTypes: true }),
+  },
   dotenv: true,
   schema: {
     type: 'object',
     properties: {
       APP_PORT: {
-        type: 'string',
+        type: 'integer',
         default: 3000,
-        maxLength: 5,
-        minLength: 1,
+        maximum: 65535,
+        minimum: 1000,
       },
       REDIS_CLIENT_HOST: {
         type: 'string',
         default: 'localhost',
       },
       REDIS_CLIENT_PORT: {
-        type: 'string',
+        type: 'integer',
         default: 6379,
-        maxLength: 5,
-        minLength: 1,
+        maximum: 65535,
+        minimum: 1000,
       },
     },
     required: ['REDIS_CLIENT_HOST', 'REDIS_CLIENT_PORT', 'APP_PORT'],

@@ -1,6 +1,8 @@
 'use strict';
 
+import camelCase from 'lodash/camelCase.js';
 import kebabCase from 'lodash/kebabCase.js';
+import upperFirst from 'lodash/upperFirst.js';
 import path from 'path';
 import pino from 'pino';
 import { GLOBAL_CONSTANTS } from '../../global-constants.js';
@@ -13,12 +15,8 @@ import { GLOBAL_CONSTANTS } from '../../global-constants.js';
  * @param {LoggerType} moduleName The type of logger to use.
  */
 function createLogger(moduleName) {
-  const dateString = new Date().toISOString().split('T')[0];
   const logFolderPath = path.join(GLOBAL_CONSTANTS.ROOT_PATH, 'logs');
-  const logFilePath = path.join(
-    logFolderPath,
-    `${kebabCase(moduleName)}-${dateString}`
-  );
+  const logFilePath = path.join(logFolderPath, `${kebabCase(moduleName)}`);
 
   const serializers = {
     request(request) {
@@ -42,12 +40,12 @@ function createLogger(moduleName) {
   const targets = [
     {
       level: 'info',
-      target: 'pino-roll',
+      target: './log-rotator.js',
       options: {
-        file: `${logFilePath}`,
+        file: `${logFilePath}%DATE%`,
         frequency: 'daily',
         mkdir: true,
-        extension: 'log',
+        extension: '.log',
       },
     },
     {
@@ -58,6 +56,9 @@ function createLogger(moduleName) {
   ];
 
   const pinoOptions = {
+    name: upperFirst(camelCase(moduleName)),
+    messageKey: 'message',
+    errorKey: 'error',
     redact,
     serializers,
     transport: {
@@ -65,9 +66,7 @@ function createLogger(moduleName) {
     },
   };
 
-  const logger = pino(pinoOptions);
-
-  return logger;
+  return pino(pinoOptions);
 }
 
 export const appLogger = createLogger('APP_LOGGER');

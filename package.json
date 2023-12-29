@@ -5,6 +5,7 @@
   "scripts": {
     "start": "node server.js",
     "start:dev": "nodemon server.js | pino-pretty",
+    "log": "node print-log.js",
     "build": "node esbuild.config.js",
     "format": "prettier ./src server.js global-constants.js --write",
     "lint": "npm run format && eslint ./src server.js global-constants.js"
@@ -18,22 +19,25 @@
     "@fastify/env": "^4.3.0",
     "@fastify/redis": "^6.1.1",
     "@fastify/sensible": "^5.5.0",
-    "@fastify/swagger": "^8.12.0",
-    "@fastify/swagger-ui": "^1.10.1",
-    "@sinclair/typebox": "^0.31.28",
+    "@fastify/swagger": "^8.13.0",
+    "@fastify/swagger-ui": "^2.0.1",
+    "@sinclair/typebox": "^0.32.4",
+    "ajv": "^8.12.0",
     "bcrypt": "^5.1.1",
-    "fastify": "^4.24.3",
+    "fastify": "^4.25.2",
     "fastify-plugin": "^4.5.1",
     "lodash": "^4.17.21",
-    "pino": "^8.16.2",
-    "pino-roll": "^1.0.0-rc.1"
+    "pino": "^8.17.2",
+    "sonic-boom": "^3.7.0"
   },
   "devDependencies": {
-    "esbuild": "^0.19.7",
-    "eslint": "^8.54.0",
+    "@inquirer/prompts": "^3.3.0",
+    "esbuild": "^0.19.10",
+    "eslint": "^8.56.0",
     "glob": "^10.3.10",
-    "nodemon": "^3.0.1",
-    "pino-pretty": "^10.2.3",
-    "prettier": "^3.1.0"
+    "nodemon": "^3.0.2",
+    "pino-pretty": "^10.3.1",
+    "prettier": "^3.1.1",
+    "pretty-bytes": "^6.1.1"
   }
 }
