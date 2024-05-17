@@ -2,6 +2,10 @@
 
 import { Type } from '@sinclair/typebox';
 
+function test(asad) {
+  console.log('asad :>> ', asad);
+}
+
 const userGetSchema = {
   description: 'this will get all users',
   tags: ['v1|user'],
