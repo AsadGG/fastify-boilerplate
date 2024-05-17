@@ -1,26 +1,16 @@
 'use strict';
 
-import AutoLoad from '@fastify/autoload';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import { healthCheck } from './controller.js';
-import { healthCheckSchema } from './schema.js';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-export default async function (fastify, opts) {
-  fastify.get(
-    '/',
-    { schema: healthCheckSchema },
-    async function (request, reply) {
-      return healthCheck(fastify, request, reply);
-    }
-  );
-
-  fastify.register(AutoLoad, {
-    dir: path.join(__dirname, 'api'),
-    maxDepth: 0,
-    options: Object.assign({}, opts, { prefix: '/api' }),
-  });
+const healthCheckSchema = {
+  summary: `This route checks the health of the server.`,
+  description: `This route sends a response to the client with a status code of 200 and a message that the server is running.`,
+  operationId: `healthCheck`,
+};
+export function GET(_fastify) {
+  return {
+    schema: healthCheckSchema,
+    handler: async function (request, reply) {
+      request.log.info({ message: `Server Is Running` });
+      return reply.status(200).send({ health: `Server Is Running` });
+    },
+  };
 }

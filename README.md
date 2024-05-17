@@ -12,10 +12,6 @@ For production mode
 
 For development mode
 
-### `npm run build`
-
-For generating build
-
 ### `npm run format`
 
 For formatting code

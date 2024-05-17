@@ -1,5 +1,6 @@
-export async function promiseHandler(promise) {
+export async function promiseHandler(promise, onfinally) {
   return promise
-    .then((result) => [result, null])
-    .catch((error) => [null, error]);
+    .then((result) => [result, null, true])
+    .catch((error) => [null, error, false])
+    .finally(onfinally);
 }

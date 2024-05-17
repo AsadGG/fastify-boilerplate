@@ -1,33 +1,53 @@
 'use strict';
 
-import { userLogger } from '../../../../config/logger.js';
-import { getUser, setUser } from './controller.js';
-import { getUserSchema, setUserSchema } from './schema.js';
+import { Type } from '@sinclair/typebox';
 
-export default async function (fastify) {
-  fastify.addHook('onRequest', function (request, reply, done) {
-    request.log = userLogger;
-    request.log.info({ request: request.raw, reply: reply.raw });
-    done();
-  });
-
-  fastify.get(
-    '/',
+const userGetSchema = {
+  description: 'this will get all users',
+  tags: ['v1|user'],
+  summary: 'get all users',
+  operationId: 'getUsers',
+  querystring: Type.Object(
     {
-      schema: getUserSchema,
+      search: Type.Optional(Type.String({ description: 'text to filter' })),
+      page: Type.Integer({ minimum: 0, default: 0 }),
+      size: Type.Integer({ minimum: 10, default: 10 }),
     },
-    async function (request, reply) {
-      return getUser(fastify, request, reply);
-    }
-  );
+    { additionalProperties: false }
+  ),
+};
+export function GET(_fastify) {
+  return {
+    schema: userGetSchema,
+    handler: async function (_request, reply) {
+      reply.send('getUsers');
+    },
+  };
+}
 
-  fastify.post(
-    '/',
+const userPostSchema = {
+  description: 'this will create a new user',
+  tags: ['v1|user'],
+  summary: 'create new user',
+  operationId: 'createUser',
+  body: Type.Object(
     {
-      schema: setUserSchema,
+      firstName: Type.String(),
+      lastName: Type.String(),
+      email: Type.String({ format: 'email' }),
+      password: Type.String(),
+      amount: Type.Number(),
+      phone: Type.String(),
+      roleId: Type.Optional(Type.String({ format: 'uuid' })),
     },
-    async function (request, reply) {
-      return setUser(fastify, request, reply);
-    }
-  );
+    { additionalProperties: false }
+  ),
+};
+export function POST(_fastify) {
+  return {
+    schema: userPostSchema,
+    handler: async function (_request, reply) {
+      reply.send('createUser');
+    },
+  };
 }

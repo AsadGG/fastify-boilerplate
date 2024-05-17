@@ -1,11 +1,10 @@
-'use strict';
-
 import camelCase from 'lodash/camelCase.js';
 import isArray from 'lodash/isArray.js';
 import isPlainObject from 'lodash/isPlainObject.js';
 import snakeCase from 'lodash/snakeCase.js';
 
 export function camelCaseKeys(object) {
+  if (isArray(object)) return object.map(camelCaseKeys);
   if (!isPlainObject(object)) return object;
   const result = {};
   for (const key in object) {
@@ -23,6 +22,7 @@ export function camelCaseKeys(object) {
 }
 
 export function snakeCaseKeys(object) {
+  if (isArray(object)) return object.map(snakeCaseKeys);
   if (!isPlainObject(object)) return object;
   const result = {};
   for (const key in object) {

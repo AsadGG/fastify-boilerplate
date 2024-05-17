@@ -1,19 +1,11 @@
-'use strict';
-
 import { readdir, stat } from 'fs/promises';
 import { dirname, join } from 'path';
 import SonicBoom from 'sonic-boom';
 
-export default async function ({
-  file,
-  size,
-  frequency,
-  extension,
-  ...opts
-} = {}) {
+export default async function ({ file, size, frequency, extension, ...opts }) {
   const frequencySpec = parseFrequency(frequency);
 
-  let number = await detectLastNumber(file, frequencySpec?.start);
+  let number = await detectLastNumber(file, frequencySpec.start);
 
   let currentSize = 0;
   const maxSize = parseSize(size);
@@ -128,14 +120,16 @@ function parseFrequency(frequency) {
     return { frequency, start, next: getNextHour(start) };
   }
   if (typeof frequency === 'number') {
-    return { frequency, next: getNextCustom(frequency) };
+    const start = 0;
+    return { frequency, start, next: getNextCustom(frequency) };
   }
   if (frequency) {
     throw new Error(
       `${frequency} is neither a supported frequency or a number of milliseconds`
     );
   }
-  return null;
+  const start = 0;
+  return { frequency, start, next: 0 };
 }
 
 async function isMatchingTime(filePath, time) {
@@ -162,7 +156,7 @@ async function readFileTrailingNumbers(folder, time) {
   return numbers;
 }
 
-async function detectLastNumber(fileName, time = null) {
+async function detectLastNumber(fileName, time = 0) {
   try {
     const numbers = await readFileTrailingNumbers(dirname(fileName), time);
     return numbers.sort((a, b) => b - a)[0];

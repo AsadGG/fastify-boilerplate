@@ -1,5 +1,3 @@
-'use strict';
-
 import sensible from '@fastify/sensible';
 import fp from 'fastify-plugin';
 /**
@@ -8,7 +6,5 @@ import fp from 'fastify-plugin';
  * @see https://github.com/fastify/fastify-sensible
  */
 export default fp(async function (fastify) {
-  fastify.register(sensible, {
-    errorHandler: false,
-  });
+  fastify.register(sensible, {});
 });

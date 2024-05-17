@@ -1,10 +1,8 @@
 /* eslint-disable no-console */
-'use strict';
-
-import select from '@inquirer/select';
+import { select } from '@inquirer/prompts';
 import { glob } from 'glob';
 import fs from 'node:fs';
-import pretty from 'pino-pretty';
+import { build as pretty } from 'pino-pretty';
 import prettyBytes from 'pretty-bytes';
 
 const logFiles = await glob('logs/*');
@@ -17,7 +15,7 @@ if (!logFiles.length) {
 const loggerTypes = [
   ...new Set(
     logFiles.map((logFiles) => {
-      const logFilesSplit = logFiles.split('\\').pop().split('-');
+      const logFilesSplit = (logFiles.split('\\').pop() as string).split('-');
       return [logFilesSplit[0], logFilesSplit[1]].join('-');
     })
   ),
