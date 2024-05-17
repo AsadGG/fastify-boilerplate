@@ -11,7 +11,7 @@
     "lint": "eslint ./src index.js global-constants.js --fix",
     "start-dev": "SET NODE_ENV=development&&nodemon index.js | pino-pretty",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "prepare": "husky",
+    "prepare": "husky && husky install",
     "lint-staged": "lint-staged --concurrent false",
     "migrate:make": "set NODE_ENV=development&&knex migrate:make",
     "migrate:latest": "set NODE_ENV=development&&knex migrate:latest",
