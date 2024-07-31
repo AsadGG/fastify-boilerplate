@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+
 'use strict';
 
 import fastifyPlugin from 'fastify-plugin';
@@ -73,6 +75,7 @@ async function fileRoutes(server, opts) {
     await registerRoutes(server, opts.routesFolder, opts.pathPrefix);
   } catch (error) {
     const { message } = error;
+    console.log('error :>> ', error);
     throw new Error(`fileRoutes: error registering routers: ${message}`);
   }
 }

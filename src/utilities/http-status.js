@@ -1,4 +1,4 @@
-const HTTP_STATUS = {
+export const HTTP_STATUS = Object.freeze({
   CONTINUE: 100,
   SWITCHING_PROTOCOLS: 101,
   PROCESSING: 102,
@@ -47,6 +47,4 @@ const HTTP_STATUS = {
   SERVICE_UNAVAILABLE: 503,
   GATEWAY_TIMEOUT: 504,
   HTTP_VERSION_NOT_SUPPORTED: 505,
-};
-
-export default HTTP_STATUS;
+});

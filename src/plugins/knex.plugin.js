@@ -5,7 +5,7 @@ import knex from 'knex';
 
 async function fastifyKnexJS(fastify, opts) {
   const handler = knex(opts);
-  await fastify.decorate('knex', handler).addHook('onClose', (instance) => {
+  fastify.decorate('knex', handler).addHook('onClose', (instance) => {
     /* istanbul ignore else */
     if (instance.knex === handler) {
       instance.knex.destroy();

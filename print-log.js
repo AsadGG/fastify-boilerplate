@@ -15,7 +15,7 @@ if (!logFiles.length) {
 const loggerTypes = [
   ...new Set(
     logFiles.map((logFiles) => {
-      const logFilesSplit = (logFiles.split('\\').pop() as string).split('-');
+      const logFilesSplit = logFiles.split('\\').pop().split('-');
       return [logFilesSplit[0], logFilesSplit[1]].join('-');
     })
   ),

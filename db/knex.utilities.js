@@ -12,7 +12,7 @@ export const createUpdateTimestampFunction = `
 
 export const dropUpdateTimestampFunction = `DROP FUNCTION IF EXISTS update_timestamp() CASCADE;`;
 
-export function applyUpdateTimestampTrigger(tableName) {
+export function createTriggerUpdateTimestampTrigger(tableName) {
   return `CREATE TRIGGER update_timestamp
     BEFORE UPDATE
     ON ${tableName}
@@ -21,5 +21,22 @@ export function applyUpdateTimestampTrigger(tableName) {
 }
 
 export function dropType(typeName) {
-  return `DROP TYPE ${typeName}`;
+  return `DROP TYPE IF EXISTS ${typeName}`;
+}
+
+export function generateSequenceName(names) {
+  if (Array.isArray(names)) {
+    return `${names.join('_')}_sequence`;
+  }
+  return `${names}_sequence`;
+}
+
+export function createSequence(names) {
+  const name = generateSequenceName(names);
+  return `CREATE SEQUENCE ${name} START 1`;
+}
+
+export function dropSequence(names) {
+  const name = generateSequenceName(names);
+  return `DROP SEQUENCE IF EXISTS ${name}`;
 }
