@@ -19,11 +19,13 @@ import { redisConfig } from './src/config/redis.config.js';
 import { s3Config } from './src/config/s3.config.js';
 import { swaggerConfig, swaggerUIConfig } from './src/config/swagger.config.js';
 import { createLogger } from './src/logger/logger.js';
+import branchAccessPlugin from './src/plugins/branch-access.plugin.js';
 import fileRoutes from './src/plugins/file-routes.plugin.js';
 import fastifyJWT from './src/plugins/jwt.plugin.js';
 import fastifyKnex from './src/plugins/knex.plugin.js';
 import fastifyLogger from './src/plugins/logger.plugin.js';
 import fastifyMailer from './src/plugins/mailer.plugin.js';
+import permissionCheckerPlugin from './src/plugins/permission-checker.plugin.js';
 import fastifyS3 from './src/plugins/s3.plugin.js';
 
 process.env.TZ = 'UTC';
@@ -44,36 +46,43 @@ const server = fastify({
   logger: appLogger,
   ajv: {
     plugins: [ajvFilePlugin],
+    customOptions: {
+      keywords: ['collectionFormat'],
+    },
   },
 });
 
 await server.register(fastifyEnv, envConfig());
 
-await server.register(fastifyKnex, knexConfig(server.config));
-
-await server.register(fastifyJWT, JWTConfig(server.config));
-
-await server.register(fastifyRedis, redisConfig(server.config));
-
 await server.register(fastifyLogger, loggerConfig());
 
-await server.register(fastifyBcrypt, bcryptConfig());
+await server.register(fastifyCORS, { origin: '*' });
+
+await server.register(fastifyKnex, knexConfig(server.config));
+
+await server.register(fastifyRedis, redisConfig(server.config));
 
 await server.register(fastifyFormbody);
 
 await server.register(fastifyMultipart, multipartConfig());
 
+await server.register(fastifyBcrypt, bcryptConfig());
+
+await server.register(fastifyJWT, JWTConfig(server.config));
+
 await server.register(fastifyS3, s3Config(server.config));
+
+await server.register(fastifyMailer, mailerConfig(server.config));
 
 await server.register(fastifySwagger, swaggerConfig());
 
 await server.register(fastifySwaggerUi, swaggerUIConfig());
 
+await server.register(branchAccessPlugin);
+
+await server.register(permissionCheckerPlugin);
+
 await server.register(fileRoutes, fileRoutesConfig());
-
-await server.register(fastifyCORS, { origin: '*' });
-
-await server.register(fastifyMailer, mailerConfig(server.config));
 
 await server.ready();
 
@@ -81,7 +90,11 @@ await server.listen({
   host: server.config.WEB_SERVER_HOST,
   port: server.config.WEB_SERVER_PORT,
   listenTextResolver: () => {
-    return `server is listening at http://localhost:3600`;
+    const host =
+      server.config.WEB_SERVER_HOST === '0.0.0.0'
+        ? 'localhost'
+        : server.config.WEB_SERVER_HOST;
+    return `server is listening at http://${host}:${server.config.WEB_SERVER_PORT}`;
   },
 });
 

@@ -1,3 +1,4 @@
+import { HTTP_STATUS } from '#utilities/http-status.js';
 import {
   getLimitAndOffset,
   getPaginationObject,
@@ -25,7 +26,6 @@ export async function getTenants(knex, data) {
     'description',
     'logo',
     'domain',
-    'gstPercentage',
     'isActive',
     'createdAt',
   ];
@@ -33,8 +33,8 @@ export async function getTenants(knex, data) {
   const filteredQuery = query
     .clone()
     .orderBy(`createdAt`, 'desc')
-    .limit(limit)
     .offset(offset)
+    .limit(limit)
     .select(tenantColumns);
 
   const multiQuery = [totalQuery, filteredQuery].join(';');
@@ -73,7 +73,6 @@ export async function getTenantById(knex, data) {
     'description',
     'logo',
     'domain',
-    'gstPercentage',
     'isActive',
     'createdAt',
   ];
@@ -90,7 +89,55 @@ export async function getTenantById(knex, data) {
     throw error;
   }
 
+  if (!result) {
+    const notFoundError = new Error(
+      `tenant of id ${data.tenantId} does not exist`
+    );
+    notFoundError.statusCode = HTTP_STATUS.NOT_FOUND;
+    throw notFoundError;
+  }
+
   const records = result;
 
   return records;
+}
+
+/**
+ * @param { import("knex").Knex } knex
+ * @returns { Promise<void> }
+ */
+export async function getTenantByDomain(knex, data) {
+  const tenantColumns = [
+    'id',
+    'name',
+    'description',
+    'logo',
+    'domain',
+    'isActive',
+    'createdAt',
+  ];
+
+  const promise = knex
+    .from(TABLE_NAMES.TENANT)
+    .where({ domain: data.domain, isDeleted: false })
+    .select(tenantColumns)
+    .first();
+
+  const [result, error, ok] = await promiseHandler(promise);
+
+  if (!ok) {
+    throw error;
+  }
+
+  if (!result) {
+    const notFoundError = new Error(
+      `tenant of domain ${data.domain} does not exist`
+    );
+    notFoundError.statusCode = HTTP_STATUS.NOT_FOUND;
+    throw notFoundError;
+  }
+
+  const record = result;
+
+  return record;
 }

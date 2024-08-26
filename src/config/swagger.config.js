@@ -7,7 +7,12 @@ export function swaggerConfig() {
         version: '1.0.0',
       },
       securityDefinitions: {
-        Authorization: {
+        AuthorizationAccess: {
+          type: 'apiKey',
+          name: 'Authorization',
+          in: 'header',
+        },
+        AuthorizationRefresh: {
           type: 'apiKey',
           name: 'Authorization',
           in: 'header',

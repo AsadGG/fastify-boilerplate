@@ -1,41 +1,31 @@
 'use strict';
 
-import { getBranches } from '#repository/branches.js';
+import { getTenantByDomain } from '#repository/tenants.js';
 import { HTTP_STATUS } from '#utilities/http-status.js';
 import { promiseHandler } from '#utilities/promise-handler.js';
 import { Type } from '@sinclair/typebox';
 
-const getBranchesSchema = {
-  description: 'this will fetch branches',
-  tags: ['v1|admin|tenant|branch'],
-  summary: 'fetch branches',
+const getTenantByDomainSchema = {
+  description: 'this will fetch tenant by domain',
+  tags: ['v1|app|tenant'],
+  summary: 'fetch tenant by domain',
   security: [{ AuthorizationAccess: [] }],
-  operationId: 'getBranches',
+  operationId: 'getTenantByDomain',
   params: Type.Object(
     {
-      tenantId: Type.String({ format: 'uuid' }),
-    },
-    { additionalProperties: false }
-  ),
-  querystring: Type.Object(
-    {
-      page: Type.Integer({ minimum: 1, default: 1 }),
-      size: Type.Integer({ minimum: 10, default: 10 }),
+      domain: Type.String(),
     },
     { additionalProperties: false }
   ),
 };
 export function GET(fastify) {
   return {
-    schema: getBranchesSchema,
-    onRequest: [fastify.authenticate],
+    schema: getTenantByDomainSchema,
     handler: async function (request, reply) {
       const data = {
-        tenantId: request.params.tenantId,
-        page: request.query.page,
-        size: request.query.size,
+        domain: request.params.domain,
       };
-      const promise = getBranches(fastify.knex, data);
+      const promise = getTenantByDomain(fastify.knex, data);
       const [result, error, ok] = await promiseHandler(promise);
       if (!ok) {
         const errorObject = {
@@ -48,11 +38,11 @@ export function GET(fastify) {
         });
         return reply.send(errorObject);
       }
+
       return reply.send({
         statusCode: HTTP_STATUS.OK,
-        message: 'branches fetched successfully.',
-        data: result.records,
-        pagination: result.pagination,
+        message: 'tenant fetched successfully.',
+        data: result,
       });
     },
   };

@@ -9,7 +9,7 @@ const getTenantsSchema = {
   description: 'this will fetch tenants',
   tags: ['v1|admin|tenant'],
   summary: 'fetch tenants',
-  security: [{ Authorization: [] }],
+  security: [{ AuthorizationAccess: [] }],
   operationId: 'getTenants',
   querystring: Type.Object(
     {
@@ -25,14 +25,14 @@ export function GET(fastify) {
     onRequest: [fastify.authenticate],
     handler: async function (request, reply) {
       const data = {
-        size: request.query.size,
         page: request.query.page,
+        size: request.query.size,
       };
       const promise = getTenants(fastify.knex, data);
       const [result, error, ok] = await promiseHandler(promise);
       if (!ok) {
         const errorObject = {
-          statusCode: HTTP_STATUS.INTERNAL_SERVER_ERROR,
+          statusCode: error.statusCode ?? HTTP_STATUS.INTERNAL_SERVER_ERROR,
           message: error.detail ?? error.message,
         };
         request.log.error({

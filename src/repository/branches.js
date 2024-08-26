@@ -1,3 +1,4 @@
+import { HTTP_STATUS } from '#utilities/http-status.js';
 import {
   getLimitAndOffset,
   getPaginationObject,
@@ -29,6 +30,10 @@ export async function getBranches(knex, data) {
     'address',
     'latitude',
     'longitude',
+    'generalSalesTax',
+    'cashTransactionTax',
+    'onlineTransactionTax',
+    'isTaxInclusive',
     'isActive',
     'createdAt',
   ];
@@ -36,8 +41,8 @@ export async function getBranches(knex, data) {
   const filteredQuery = query
     .clone()
     .orderBy(`createdAt`, 'desc')
-    .limit(limit)
     .offset(offset)
+    .limit(limit)
     .select(branchColumns);
 
   const multiQuery = [totalQuery, filteredQuery].join(';');
@@ -78,6 +83,10 @@ export async function getBranchById(knex, data) {
     'address',
     'latitude',
     'longitude',
+    'generalSalesTax',
+    'cashTransactionTax',
+    'onlineTransactionTax',
+    'isTaxInclusive',
     'isActive',
     'createdAt',
   ];
@@ -91,6 +100,53 @@ export async function getBranchById(knex, data) {
     })
     .select(branchColumns)
     .first();
+
+  const [result, error, ok] = await promiseHandler(promise);
+
+  if (!ok) {
+    throw error;
+  }
+
+  if (!result) {
+    const error = new Error(`branch of id ${data.branchId} does not exist`);
+    error.statusCode = HTTP_STATUS.NOT_FOUND;
+    throw error;
+  }
+
+  const record = result;
+
+  return record;
+}
+
+/**
+ * @param { import("knex").Knex } knex
+ * @returns { Promise<void> }
+ */
+export async function getBranchesByIds(knex, data) {
+  const branchColumns = [
+    'id',
+    'tenantId',
+    'name',
+    'email',
+    'address',
+    'latitude',
+    'longitude',
+    'generalSalesTax',
+    'cashTransactionTax',
+    'onlineTransactionTax',
+    'isTaxInclusive',
+    'isActive',
+    'createdAt',
+  ];
+
+  const promise = knex
+    .from(TABLE_NAMES.BRANCH)
+    .where({
+      tenantId: data.tenantId,
+      isDeleted: false,
+    })
+    .whereIn('id', data.branchIds)
+    .select(branchColumns);
 
   const [result, error, ok] = await promiseHandler(promise);
 

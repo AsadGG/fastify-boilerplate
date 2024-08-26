@@ -1,26 +1,36 @@
 'use strict';
 
-import { getBranches } from '#repository/branches.js';
+import { getBranchesByIds } from '#repository/branches.js';
+import { getOfficeUserBranches } from '#repository/office-users.js';
 import { HTTP_STATUS } from '#utilities/http-status.js';
 import { promiseHandler } from '#utilities/promise-handler.js';
 import { Type } from '@sinclair/typebox';
 
+function setBranchesForUser(fastify) {
+  return async function (request, reply) {
+    try {
+      const { tenantId, officeUserId } = request.user;
+      const result = await getOfficeUserBranches(fastify.knex, {
+        tenantId,
+        officeUserId,
+      });
+      request.user.branches = result.branches;
+      return true;
+    } catch (error) {
+      reply.send(error);
+    }
+  };
+}
+
 const getBranchesSchema = {
-  description: 'this will fetch branches',
-  tags: ['v1|admin|tenant|branch'],
-  summary: 'fetch branches',
+  description: 'this will fetch office user branches',
+  tags: ['v1|admin|tenant|office user|branch'],
+  summary: 'fetch office user branches',
   security: [{ AuthorizationAccess: [] }],
-  operationId: 'getBranches',
+  operationId: 'getOfficeUserBranches',
   params: Type.Object(
     {
       tenantId: Type.String({ format: 'uuid' }),
-    },
-    { additionalProperties: false }
-  ),
-  querystring: Type.Object(
-    {
-      page: Type.Integer({ minimum: 1, default: 1 }),
-      size: Type.Integer({ minimum: 10, default: 10 }),
     },
     { additionalProperties: false }
   ),
@@ -28,14 +38,13 @@ const getBranchesSchema = {
 export function GET(fastify) {
   return {
     schema: getBranchesSchema,
-    onRequest: [fastify.authenticate],
+    onRequest: [fastify.authenticate, setBranchesForUser(fastify)],
     handler: async function (request, reply) {
       const data = {
         tenantId: request.params.tenantId,
-        page: request.query.page,
-        size: request.query.size,
+        branchIds: request.user.branches,
       };
-      const promise = getBranches(fastify.knex, data);
+      const promise = getBranchesByIds(fastify.knex, data);
       const [result, error, ok] = await promiseHandler(promise);
       if (!ok) {
         const errorObject = {
@@ -51,8 +60,7 @@ export function GET(fastify) {
       return reply.send({
         statusCode: HTTP_STATUS.OK,
         message: 'branches fetched successfully.',
-        data: result.records,
-        pagination: result.pagination,
+        data: result,
       });
     },
   };

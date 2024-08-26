@@ -9,7 +9,7 @@ const getBranchByIdSchema = {
   description: 'this will fetch branch by id',
   tags: ['v1|admin|tenant|branch'],
   summary: 'fetch branch',
-  security: [{ Authorization: [] }],
+  security: [{ AuthorizationAccess: [] }],
   operationId: 'getBranchById',
   params: Type.Object(
     {
@@ -22,7 +22,11 @@ const getBranchByIdSchema = {
 export function GET(fastify) {
   return {
     schema: getBranchByIdSchema,
-    onRequest: [fastify.authenticate],
+    onRequest: [
+      fastify.authenticate,
+      fastify.checkBranchAccess,
+      fastify.checkPermission('getBranchById'),
+    ],
     handler: async function (request, reply) {
       const data = {
         tenantId: request.params.tenantId,
@@ -32,7 +36,7 @@ export function GET(fastify) {
       const [result, error, ok] = await promiseHandler(promise);
       if (!ok) {
         const errorObject = {
-          statusCode: HTTP_STATUS.INTERNAL_SERVER_ERROR,
+          statusCode: error.statusCode ?? HTTP_STATUS.INTERNAL_SERVER_ERROR,
           message: error.detail ?? error.message,
         };
         request.log.error({
@@ -41,17 +45,7 @@ export function GET(fastify) {
         });
         return reply.send(errorObject);
       }
-      if (!result) {
-        const errorObject = {
-          statusCode: HTTP_STATUS.NOT_FOUND,
-          message: `branch of id ${request.params.branchId} does not exist`,
-        };
-        request.log.error({
-          ...errorObject,
-          payload: data,
-        });
-        return reply.send(errorObject);
-      }
+
       return reply.send({
         statusCode: HTTP_STATUS.OK,
         message: 'branch fetched successfully.',

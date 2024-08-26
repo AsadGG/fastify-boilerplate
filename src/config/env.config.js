@@ -19,8 +19,11 @@ const ENV_SCHEMA = Type.Object({
   DATABASE: Type.String(),
   DATABASE_URL: Type.String(),
 
-  JWT_SECRET: Type.String(),
-  JWT_EXPIRES_IN: Type.String(),
+  ACCESS_JWT_SECRET: Type.String(),
+  ACCESS_JWT_EXPIRES_IN: Type.String(),
+
+  REFRESH_JWT_SECRET: Type.String(),
+  REFRESH_JWT_EXPIRES_IN: Type.String(),
 
   REDIS_PORT: Type.Integer({
     maximum: 65535,
@@ -37,6 +40,8 @@ const ENV_SCHEMA = Type.Object({
 
   PAYFAST_MERCHANT_ID: Type.String(),
   PAYFAST_SECURED_KEY: Type.String(),
+
+  CRON_SECRET: Type.String(),
 });
 
 function envConfig() {

@@ -9,7 +9,7 @@ const getTenantByIdSchema = {
   description: 'this will fetch tenant by id',
   tags: ['v1|admin|tenant'],
   summary: 'fetch tenant',
-  security: [{ Authorization: [] }],
+  security: [{ AuthorizationAccess: [] }],
   operationId: 'getTenantById',
   params: Type.Object(
     {
@@ -30,19 +30,8 @@ export function GET(fastify) {
       const [result, error, ok] = await promiseHandler(promise);
       if (!ok) {
         const errorObject = {
-          statusCode: HTTP_STATUS.INTERNAL_SERVER_ERROR,
+          statusCode: error.statusCode ?? HTTP_STATUS.INTERNAL_SERVER_ERROR,
           message: error.detail ?? error.message,
-        };
-        request.log.error({
-          ...errorObject,
-          payload: data,
-        });
-        return reply.send(errorObject);
-      }
-      if (!result) {
-        const errorObject = {
-          statusCode: HTTP_STATUS.NOT_FOUND,
-          message: `tenant of id ${request.params.tenantId} does not exist`,
         };
         request.log.error({
           ...errorObject,

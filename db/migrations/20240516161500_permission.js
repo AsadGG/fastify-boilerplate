@@ -6,20 +6,20 @@ import { createTriggerUpdateTimestampTrigger } from '../knex.utilities.js';
  */
 export async function up(knex) {
   return knex.schema
-    .createTable('tenant', function (table) {
+    .createTable('permission', function (table) {
       table.uuid('id').primary().defaultTo(knex.fn.uuid());
+      table.uuid('tenant_id').notNullable();
+      table.foreign('tenant_id').references('tenant.id');
       table.text('name').notNullable();
-      table.text('description').nullable();
-      table.text('logo').nullable();
-      table.text('domain').notNullable();
+      table.text('path').nullable();
       table.boolean('is_active').notNullable().defaultTo(true);
       table.boolean('is_deleted').notNullable().defaultTo(false);
       table.timestamps(true, true);
-      table.unique('domain', {
+      table.unique(['tenant_id', 'name'], {
         predicate: knex.whereRaw('is_deleted = false'),
       });
     })
-    .raw(createTriggerUpdateTimestampTrigger('tenant'));
+    .raw(createTriggerUpdateTimestampTrigger('permission'));
 }
 
 /**
@@ -27,5 +27,5 @@ export async function up(knex) {
  * @returns { Promise<void> }
  */
 export async function down(knex) {
-  return knex.schema.dropTable('tenant');
+  return knex.schema.dropTable('permission');
 }

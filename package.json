@@ -19,7 +19,8 @@
     "migrate:rollback": "set NODE_ENV=development&&knex migrate:rollback",
     "migrate:down": "set NODE_ENV=development&&knex migrate:down",
     "seed:make": "set NODE_ENV=development&&knex seed:make",
-    "seed:run": "set NODE_ENV=development&&knex seed:run"
+    "seed:run": "set NODE_ENV=development&&knex seed:run",
+    "script:run": "set NODE_ENV=development&&node db/script/run-script.js"
   },
   "imports": {
     "#repository/*": "./src/repository/*",
@@ -40,6 +41,7 @@
     "@fastify/sensible": "^5.5.0",
     "@fastify/swagger": "^8.14.0",
     "@fastify/swagger-ui": "github:AsadGG/fastify-swagger-ui",
+    "@lukeed/ms": "^2.0.2",
     "@sendgrid/mail": "^8.1.3",
     "@sinclair/typebox": "^0.32.10",
     "ajv": "^8.12.0",

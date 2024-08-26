@@ -6,27 +6,28 @@ import { createTriggerUpdateTimestampTrigger } from '../knex.utilities.js';
  */
 export async function up(knex) {
   return knex.schema
-    .createTable('branch', function (table) {
+    .createTable('office_user', function (table) {
       table.uuid('id').primary().defaultTo(knex.fn.uuid());
       table.uuid('tenant_id').notNullable();
       table.foreign('tenant_id').references('tenant.id');
-      table.text('name').notNullable();
-      table.text('email').nullable();
-      table.text('address').nullable();
-      table.decimal('latitude', 15, 12).nullable().defaultTo(0);
-      table.decimal('longitude', 15, 12).nullable().defaultTo(0);
-      table.smallint('general_sales_tax').nullable().defaultTo(0);
-      table.smallint('cash_transaction_tax').nullable().defaultTo(0);
-      table.smallint('online_transaction_tax').nullable().defaultTo(0);
-      table.boolean('is_tax_inclusive').nullable().defaultTo(false);
+      table.text('first_name').notNullable();
+      table.text('last_name').notNullable();
+      table.text('image').notNullable();
+      table.text('password').notNullable();
+      table.text('email').notNullable();
+      table.text('address').notNullable();
+      table.text('phone').notNullable();
       table.boolean('is_active').notNullable().defaultTo(true);
       table.boolean('is_deleted').notNullable().defaultTo(false);
       table.timestamps(true, true);
       table.unique(['tenant_id', 'email'], {
         predicate: knex.whereRaw('is_deleted = false'),
       });
+      table.unique(['tenant_id', 'phone'], {
+        predicate: knex.whereRaw('is_deleted = false'),
+      });
     })
-    .raw(createTriggerUpdateTimestampTrigger('branch'));
+    .raw(createTriggerUpdateTimestampTrigger('office_user'));
 }
 
 /**
@@ -34,5 +35,5 @@ export async function up(knex) {
  * @returns { Promise<void> }
  */
 export async function down(knex) {
-  return knex.schema.dropTable('branch');
+  return knex.schema.dropTable('office_user');
 }
