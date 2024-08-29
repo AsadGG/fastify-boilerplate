@@ -1,9 +1,13 @@
-export function getAccessTokenKey(tenantId, token) {
-  return `TENANT:${tenantId}:OFFICE_USER_ACCESS_TOKEN:${token}`;
+export function getOfficeUserKeysPattern(tenantId, officeUserId) {
+  return `TENANT:${tenantId}:OFFICE_USER:${officeUserId}*`;
 }
 
-export function getRefreshTokenKey(tenantId, token) {
-  return `TENANT:${tenantId}:OFFICE_USER_REFRESH_TOKEN:${token}`;
+export function getAccessTokenKey(tenantId, officeUserId, token) {
+  return `TENANT:${tenantId}:OFFICE_USER:${officeUserId}:ACCESS_TOKEN:${token}`;
+}
+
+export function getRefreshTokenKey(tenantId, officeUserId, token) {
+  return `TENANT:${tenantId}:OFFICE_USER:${officeUserId}:REFRESH_TOKEN:${token}`;
 }
 
 export function getOfficeUserBranchesKey(tenantId, officeUserId) {

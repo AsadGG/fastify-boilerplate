@@ -1,5 +1,7 @@
 'use strict';
 
+import { HTTP_STATUS } from '#utilities/http-status.js';
+
 const healthCheckSchema = {
   summary: `This route checks the health of the server.`,
   description: `This route sends a response to the client with a status code of 200 and a message that the server is running.`,
@@ -10,7 +12,7 @@ export function GET(_fastify) {
     schema: healthCheckSchema,
     handler: async function (request, reply) {
       request.log.info({ message: `Server Is Running` });
-      return reply.status(200).send({ health: `Server Is Running` });
+      return reply.status(HTTP_STATUS.OK).send({ health: `Server Is Running` });
     },
   };
 }

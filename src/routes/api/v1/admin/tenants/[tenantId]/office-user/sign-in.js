@@ -37,10 +37,8 @@ export function POST(fastify) {
     handler: async function (request, reply) {
       const data = {
         tenantId: request.params.tenantId,
-        branchId: request.params.branchId,
         ...request.body,
       };
-
       const promise = getOfficeUserByEmail(fastify.knex, data);
       const [result, error, ok] = await promiseHandler(promise);
       if (!ok) {
@@ -74,14 +72,16 @@ export function POST(fastify) {
 
       delete result.password;
 
+      const officeUserId = result.id;
+
       const accessToken = fastify.jwt.access.sign({
         tenantId: request.params.tenantId,
-        officeUserId: result.id,
+        officeUserId: officeUserId,
       });
 
       const refreshToken = fastify.jwt.refresh.sign({
         tenantId: request.params.tenantId,
-        officeUserId: result.id,
+        officeUserId: officeUserId,
       });
 
       const accessTokenHash = getSha256Hash(accessToken);
@@ -91,10 +91,12 @@ export function POST(fastify) {
 
       const accessTokenKey = getAccessTokenKey(
         request.params.tenantId,
+        officeUserId,
         accessTokenHash
       );
       const refreshTokenKey = getRefreshTokenKey(
         request.params.tenantId,
+        officeUserId,
         refreshTokenHash
       );
 
@@ -111,8 +113,8 @@ export function POST(fastify) {
         message: 'signed in successfully.',
         data: {
           ...result,
-          accessToken: accessTokenHash,
-          refreshToken: refreshTokenHash,
+          accessToken: `${officeUserId}:${accessTokenHash}`,
+          refreshToken: `${officeUserId}:${refreshTokenHash}`,
         },
       });
     },

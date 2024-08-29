@@ -49,13 +49,15 @@ export function POST(fastify) {
         return reply.send(errorObject);
       }
 
+      const officeUserId = result.id;
+
       const accessToken = fastify.jwt.access.sign({
         tenantId: request.params.tenantId,
-        officeUserId: result.id,
+        officeUserId: officeUserId,
       });
       const refreshToken = fastify.jwt.refresh.sign({
         tenantId: request.params.tenantId,
-        officeUserId: result.id,
+        officeUserId: officeUserId,
       });
 
       const accessTokenHash = getSha256Hash(accessToken);
@@ -65,10 +67,12 @@ export function POST(fastify) {
 
       const accessTokenKey = getAccessTokenKey(
         request.params.tenantId,
+        officeUserId,
         accessTokenHash
       );
       const refreshTokenKey = getRefreshTokenKey(
         request.params.tenantId,
+        officeUserId,
         refreshTokenHash
       );
 
@@ -85,8 +89,8 @@ export function POST(fastify) {
         message: 'token refreshed successfully.',
         data: {
           ...result,
-          accessToken: accessTokenHash,
-          refreshToken: refreshTokenHash,
+          accessToken: `${officeUserId}:${accessTokenHash}`,
+          refreshToken: `${officeUserId}:${refreshTokenHash}`,
         },
       });
     },
