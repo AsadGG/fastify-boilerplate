@@ -1,5 +1,3 @@
-'use strict';
-
 import fastifyPlugin from 'fastify-plugin';
 import knex from 'knex';
 

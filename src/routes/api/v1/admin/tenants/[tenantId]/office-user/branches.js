@@ -1,5 +1,3 @@
-'use strict';
-
 import { getBranchesByIds } from '#repository/branches.js';
 import { getOfficeUserBranches } from '#repository/office-users.js';
 import { HTTP_STATUS } from '#utilities/http-status.js';

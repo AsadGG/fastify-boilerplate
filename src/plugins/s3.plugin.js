@@ -1,5 +1,3 @@
-'use strict';
-
 import { HTTP_STATUS } from '#utilities/http-status.js';
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import fastifyPlugin from 'fastify-plugin';

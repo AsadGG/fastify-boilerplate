@@ -1,5 +1,3 @@
-'use strict';
-
 import { HTTP_STATUS } from '#utilities/http-status.js';
 import fastifyPlugin from 'fastify-plugin';
 

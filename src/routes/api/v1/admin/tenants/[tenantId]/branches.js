@@ -1,5 +1,3 @@
-'use strict';
-
 import { getBranches } from '#repository/branches.js';
 import { HTTP_STATUS } from '#utilities/http-status.js';
 import { promiseHandler } from '#utilities/promise-handler.js';

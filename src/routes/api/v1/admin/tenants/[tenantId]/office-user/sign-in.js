@@ -1,5 +1,3 @@
-'use strict';
-
 import { getOfficeUserByEmail } from '#repository/office-users.js';
 import { getSha256Hash } from '#utilities/hash.js';
 import { HTTP_STATUS } from '#utilities/http-status.js';

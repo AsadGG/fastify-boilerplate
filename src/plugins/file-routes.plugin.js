@@ -1,7 +1,3 @@
-/* eslint-disable no-console */
-
-'use strict';
-
 import fastifyPlugin from 'fastify-plugin';
 import fs from 'fs';
 import path from 'path';

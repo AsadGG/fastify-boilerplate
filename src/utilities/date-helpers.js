@@ -1,6 +1,6 @@
 import { set } from 'date-fns/set';
 
-export function getTimeAsDateTime(time, date = new Date()) {
+export function getTimeAsDateTime(time, date = new Date(0)) {
   const timeRegex = /^\d{1,2}:\d{2}:\d{2}$/;
   const isValidFormat = timeRegex.test(time);
   if (!isValidFormat) {

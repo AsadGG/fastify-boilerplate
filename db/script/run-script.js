@@ -1,7 +1,5 @@
 /* eslint-disable no-console */
 
-'use strict';
-
 import chalk from 'chalk';
 import knex from 'knex';
 import path from 'path';

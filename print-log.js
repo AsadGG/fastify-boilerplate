@@ -1,7 +1,5 @@
 /* eslint-disable no-console */
 
-'use strict';
-
 import { select } from '@inquirer/prompts';
 import { glob } from 'glob';
 import fs from 'node:fs';

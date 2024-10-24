@@ -1,5 +1,3 @@
-'use strict';
-
 import { HTTP_STATUS } from '#utilities/http-status.js';
 import { createRedisFunctions } from '#utilities/redis-helpers.js';
 import { getOfficeUserKeysPattern } from '#utilities/redis-keys.js';

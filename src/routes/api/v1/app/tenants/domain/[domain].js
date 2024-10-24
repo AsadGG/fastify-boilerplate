@@ -1,5 +1,3 @@
-'use strict';
-
 import { getTenantByDomain } from '#repository/tenants.js';
 import { HTTP_STATUS } from '#utilities/http-status.js';
 import { promiseHandler } from '#utilities/promise-handler.js';

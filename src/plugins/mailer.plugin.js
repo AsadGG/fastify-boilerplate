@@ -1,5 +1,3 @@
-'use strict';
-
 import sendgridMail from '@sendgrid/mail';
 import fastifyPlugin from 'fastify-plugin';
 
