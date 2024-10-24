@@ -9,7 +9,7 @@ const getBranchesSchema = {
   description: 'this will fetch branches',
   tags: ['v1|admin|tenant|branch'],
   summary: 'fetch branches',
-  security: [{ AuthorizationAccess: [] }],
+  security: [{ AuthorizationOfficeUserAccess: [] }],
   operationId: 'getBranches',
   params: Type.Object(
     {
@@ -28,7 +28,7 @@ const getBranchesSchema = {
 export function GET(fastify) {
   return {
     schema: getBranchesSchema,
-    onRequest: [fastify.authenticate],
+    onRequest: [fastify.authenticateOfficeUserAccess],
     handler: async function (request, reply) {
       const data = {
         tenantId: request.params.tenantId,

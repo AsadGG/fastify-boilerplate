@@ -9,7 +9,7 @@ const getBranchByIdSchema = {
   description: 'this will fetch branch by id',
   tags: ['v1|admin|tenant|branch'],
   summary: 'fetch branch',
-  security: [{ AuthorizationAccess: [] }],
+  security: [{ AuthorizationOfficeUserAccess: [] }],
   operationId: 'getBranchById',
   params: Type.Object(
     {
@@ -23,7 +23,7 @@ export function GET(fastify) {
   return {
     schema: getBranchByIdSchema,
     onRequest: [
-      fastify.authenticate,
+      fastify.authenticateOfficeUserAccess,
       fastify.checkBranchAccess,
       fastify.checkPermission('getBranchById'),
     ],

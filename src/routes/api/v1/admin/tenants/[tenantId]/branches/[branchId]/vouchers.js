@@ -9,7 +9,7 @@ const getVouchersSchema = {
   description: 'this will fetch vouchers',
   tags: ['v1|admin|tenant|branch|voucher'],
   summary: 'fetch vouchers',
-  security: [{ AuthorizationAccess: [] }],
+  security: [{ AuthorizationOfficeUserAccess: [] }],
   operationId: 'getVouchers',
   params: Type.Object(
     {
@@ -31,7 +31,7 @@ export function GET(fastify) {
   return {
     schema: getVouchersSchema,
     onRequest: [
-      fastify.authenticate,
+      fastify.authenticateOfficeUserAccess,
       fastify.checkBranchAccess,
       fastify.checkPermission('getVouchers'),
     ],
@@ -70,7 +70,7 @@ const createVoucherSchema = {
   description: 'this will create new voucher',
   tags: ['v1|admin|tenant|branch|voucher'],
   summary: 'create new voucher',
-  security: [{ AuthorizationAccess: [] }],
+  security: [{ AuthorizationOfficeUserAccess: [] }],
   operationId: 'createVoucher',
   params: Type.Object(
     {
@@ -97,7 +97,7 @@ export function POST(fastify) {
   return {
     schema: createVoucherSchema,
     onRequest: [
-      fastify.authenticate,
+      fastify.authenticateOfficeUserAccess,
       fastify.checkBranchAccess,
       fastify.checkPermission('createVoucher'),
     ],

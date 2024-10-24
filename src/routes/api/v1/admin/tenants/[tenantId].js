@@ -9,7 +9,7 @@ const getTenantByIdSchema = {
   description: 'this will fetch tenant by id',
   tags: ['v1|admin|tenant'],
   summary: 'fetch tenant',
-  security: [{ AuthorizationAccess: [] }],
+  security: [{ AuthorizationOfficeUserAccess: [] }],
   operationId: 'getTenantById',
   params: Type.Object(
     {
@@ -21,7 +21,7 @@ const getTenantByIdSchema = {
 export function GET(fastify) {
   return {
     schema: getTenantByIdSchema,
-    onRequest: [fastify.authenticate],
+    onRequest: [fastify.authenticateOfficeUserAccess],
     handler: async function (request, reply) {
       const data = {
         tenantId: request.params.tenantId,

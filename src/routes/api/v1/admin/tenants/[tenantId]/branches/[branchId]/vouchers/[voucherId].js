@@ -13,7 +13,7 @@ const getVoucherByIdSchema = {
   description: 'this will fetch voucher by id',
   tags: ['v1|admin|tenant|branch|voucher'],
   summary: 'fetch voucher',
-  security: [{ AuthorizationAccess: [] }],
+  security: [{ AuthorizationOfficeUserAccess: [] }],
   operationId: 'getVoucherById',
   params: Type.Object(
     {
@@ -28,7 +28,7 @@ export function GET(fastify) {
   return {
     schema: getVoucherByIdSchema,
     onRequest: [
-      fastify.authenticate,
+      fastify.authenticateOfficeUserAccess,
       fastify.checkBranchAccess,
       fastify.checkPermission('getVoucherById'),
     ],
@@ -65,7 +65,7 @@ const updateVoucherByIdSchema = {
   description: 'this will update voucher by id',
   tags: ['v1|admin|tenant|branch|voucher'],
   summary: 'update voucher',
-  security: [{ AuthorizationAccess: [] }],
+  security: [{ AuthorizationOfficeUserAccess: [] }],
   operationId: 'updateVoucherById',
   params: Type.Object(
     {
@@ -95,7 +95,7 @@ export function PATCH(fastify) {
   return {
     schema: updateVoucherByIdSchema,
     onRequest: [
-      fastify.authenticate,
+      fastify.authenticateOfficeUserAccess,
       fastify.checkBranchAccess,
       fastify.checkPermission('updateVoucherById'),
     ],
@@ -135,7 +135,7 @@ const deleteVoucherByIdSchema = {
   description: 'this will delete voucher by id',
   tags: ['v1|admin|tenant|branch|voucher'],
   summary: 'delete voucher',
-  security: [{ AuthorizationAccess: [] }],
+  security: [{ AuthorizationOfficeUserAccess: [] }],
   operationId: 'deleteVoucherById',
   params: Type.Object(
     {
@@ -150,7 +150,7 @@ export function DELETE(fastify) {
   return {
     schema: deleteVoucherByIdSchema,
     onRequest: [
-      fastify.authenticate,
+      fastify.authenticateOfficeUserAccess,
       fastify.checkBranchAccess,
       fastify.checkPermission('deleteVoucherById'),
     ],

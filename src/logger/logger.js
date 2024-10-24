@@ -26,24 +26,31 @@ export function createLogger(moduleName) {
     },
   };
 
-  const redact = ['request.headers.authorization'];
+  const redact = {
+    paths: ['request.headers.authorization', '*.password'],
+    censor: '*** REDACTED ***',
+  };
 
   const targets = [
     {
       level: 'info',
-      target: './log-rotator',
+      target: 'pino-roll',
       options: {
-        file: `${logFilePath}%DATE%`,
+        file: logFilePath,
         frequency: 'daily',
         mkdir: true,
         extension: '.log',
-        size: '1024k',
+        size: '8m',
+        dateFormat: 'yyyy-MM-dd',
       },
     },
     {
       level: 'info',
-      target: 'pino/file',
-      options: { destination: 1 },
+      target: 'pino-pretty',
+      options: {
+        colorize: true,
+        destination: 1,
+      },
     },
   ];
 

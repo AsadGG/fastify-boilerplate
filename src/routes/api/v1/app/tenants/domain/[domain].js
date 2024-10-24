@@ -9,7 +9,6 @@ const getTenantByDomainSchema = {
   description: 'this will fetch tenant by domain',
   tags: ['v1|app|tenant'],
   summary: 'fetch tenant by domain',
-  security: [{ AuthorizationAccess: [] }],
   operationId: 'getTenantByDomain',
   params: Type.Object(
     {

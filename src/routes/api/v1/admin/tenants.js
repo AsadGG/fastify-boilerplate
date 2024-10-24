@@ -9,7 +9,7 @@ const getTenantsSchema = {
   description: 'this will fetch tenants',
   tags: ['v1|admin|tenant'],
   summary: 'fetch tenants',
-  security: [{ AuthorizationAccess: [] }],
+  security: [{ AuthorizationOfficeUserAccess: [] }],
   operationId: 'getTenants',
   querystring: Type.Object(
     {
@@ -22,7 +22,7 @@ const getTenantsSchema = {
 export function GET(fastify) {
   return {
     schema: getTenantsSchema,
-    onRequest: [fastify.authenticate],
+    onRequest: [fastify.authenticateOfficeUserAccess],
     handler: async function (request, reply) {
       const data = {
         page: request.query.page,

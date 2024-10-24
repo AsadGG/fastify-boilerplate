@@ -6,7 +6,7 @@ import fastifyPlugin from 'fastify-plugin';
 import fs from 'fs';
 import path from 'path';
 
-const methods = ['DELETE', 'GET', 'HEAD', 'PATCH', 'POST', 'PUT', 'OPTIONS'];
+const methods = ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'HEAD', 'OPTIONS'];
 
 const extensions = ['.js'];
 
@@ -25,13 +25,18 @@ function shouldIgnore(name) {
 }
 
 async function addRequestHandler(module, method, server, fileRouteServerPath) {
-  const route = module[method];
-  if (route) {
-    server.route({
-      ...route(server),
-      method: method,
-      url: fileRouteServerPath,
-    });
+  try {
+    const route = module[method];
+    if (route) {
+      server.route({
+        ...route(server),
+        method: method,
+        url: fileRouteServerPath,
+      });
+    }
+  } catch (error) {
+    console.log('path :>> ', fileRouteServerPath);
+    throw error;
   }
 }
 

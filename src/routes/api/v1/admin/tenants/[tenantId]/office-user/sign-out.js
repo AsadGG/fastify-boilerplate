@@ -9,7 +9,7 @@ const officeUserSignOutSchema = {
   description: 'this will sign out office user',
   tags: ['v1|admin|tenant|office user'],
   summary: 'sign out office user',
-  security: [{ AuthorizationRefresh: [] }],
+  security: [{ AuthorizationOfficeUserRefresh: [] }],
   operationId: 'officeUserSignOut',
   params: Type.Object(
     {
@@ -21,7 +21,7 @@ const officeUserSignOutSchema = {
 export function POST(fastify) {
   return {
     schema: officeUserSignOutSchema,
-    onRequest: [fastify.authenticate],
+    onRequest: [fastify.authenticateOfficeUserAccess],
     handler: async function (request, reply) {
       const { officeUserId } = request.user;
 

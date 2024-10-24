@@ -6,8 +6,8 @@ import { HTTP_STATUS } from '#utilities/http-status.js';
 import { promiseHandler } from '#utilities/promise-handler.js';
 import { createRedisFunctions } from '#utilities/redis-helpers.js';
 import {
-  getAccessTokenKey,
-  getRefreshTokenKey,
+  getOfficeUserAccessTokenKey,
+  getOfficeUserRefreshTokenKey,
 } from '#utilities/redis-keys.js';
 import { parse } from '@lukeed/ms';
 import { Type } from '@sinclair/typebox';
@@ -16,7 +16,7 @@ const officeUserSignInSchema = {
   description: 'this will refresh office user tokens',
   tags: ['v1|admin|tenant|office user'],
   summary: 'office user refresh',
-  security: [{ AuthorizationRefresh: [] }],
+  security: [{ AuthorizationOfficeUserRefresh: [] }],
   operationId: 'officeUserRefresh',
   params: Type.Object(
     {
@@ -28,7 +28,7 @@ const officeUserSignInSchema = {
 export function POST(fastify) {
   return {
     schema: officeUserSignInSchema,
-    onRequest: [fastify.authenticateRefresh],
+    onRequest: [fastify.authenticateOfficeUserRefresh],
     handler: async function (request, reply) {
       const data = {
         tenantId: request.params.tenantId,
@@ -65,12 +65,12 @@ export function POST(fastify) {
 
       const { set } = createRedisFunctions(fastify.redis);
 
-      const accessTokenKey = getAccessTokenKey(
+      const accessTokenKey = getOfficeUserAccessTokenKey(
         request.params.tenantId,
         officeUserId,
         accessTokenHash
       );
-      const refreshTokenKey = getRefreshTokenKey(
+      const refreshTokenKey = getOfficeUserRefreshTokenKey(
         request.params.tenantId,
         officeUserId,
         refreshTokenHash

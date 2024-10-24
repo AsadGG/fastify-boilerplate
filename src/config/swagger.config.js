@@ -7,12 +7,32 @@ export function swaggerConfig() {
         version: '1.0.0',
       },
       securityDefinitions: {
-        AuthorizationAccess: {
+        AuthorizationSuperAdminAccess: {
           type: 'apiKey',
           name: 'Authorization',
           in: 'header',
         },
-        AuthorizationRefresh: {
+        AuthorizationSuperAdminRefresh: {
+          type: 'apiKey',
+          name: 'Authorization',
+          in: 'header',
+        },
+        AuthorizationTenantAdminAccess: {
+          type: 'apiKey',
+          name: 'Authorization',
+          in: 'header',
+        },
+        AuthorizationTenantAdminRefresh: {
+          type: 'apiKey',
+          name: 'Authorization',
+          in: 'header',
+        },
+        AuthorizationOfficeUserAccess: {
+          type: 'apiKey',
+          name: 'Authorization',
+          in: 'header',
+        },
+        AuthorizationOfficeUserRefresh: {
           type: 'apiKey',
           name: 'Authorization',
           in: 'header',
@@ -26,6 +46,7 @@ const CSS_CONTENT = `
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@100..900&display=swap');
 * {
   font-family: 'Noto Sans Mono', monospace !important;
+  font-weight: 600 !important;
 }
 .swagger-ui .parameters-col_description input {
   max-width: 25rem !important;

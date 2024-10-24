@@ -1,13 +1,13 @@
 import { createLogger } from '../logger/logger.js';
 
-const userLogger = createLogger('USER_LOGGER');
 const adminLogger = createLogger('ADMIN_LOGGER');
+const appLogger = createLogger('App_LOGGER');
 
 export function loggerConfig() {
   return {
     loggers: [
-      { path: '/api/v1/user', logger: userLogger },
       { path: '/api/v1/admin', logger: adminLogger },
+      { path: '/api/v1/app', logger: appLogger },
     ],
   };
 }
