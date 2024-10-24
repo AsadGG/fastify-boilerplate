@@ -11,7 +11,6 @@
     "lint": "eslint ./src index.js global-constants.js --fix",
     "start:dev": "set NODE_ENV=development&&nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "prepare": "husky && husky install",
     "lint-staged": "lint-staged --concurrent false",
     "migrate:make": "set NODE_ENV=development&&knex migrate:make",
     "migrate:latest": "set NODE_ENV=development&&knex migrate:latest",
@@ -20,7 +19,8 @@
     "migrate:down": "set NODE_ENV=development&&knex migrate:down",
     "seed:make": "set NODE_ENV=development&&knex seed:make",
     "seed:run": "set NODE_ENV=development&&knex seed:run",
-    "script:run": "set NODE_ENV=development&&node db/script/run-script.js"
+    "script:run": "set NODE_ENV=development&&node db/script/run-script.js",
+    "prepare": "husky"
   },
   "imports": {
     "#repository/*": "./src/repository/*",
